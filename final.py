@@ -30,8 +30,10 @@ service = Service(executable_path="chromedriver.exe")
 driver = webdriver.Chrome(service=service)
 wait = WebDriverWait(driver, 10)
 
+
+
 # Step 1: Read selected MAL numbers from CSV
-with open('mal_codes.csv') as file:
+with open('break1.csv') as file:
     reader = csv.reader(file)
     data = list(reader)
 
@@ -90,7 +92,7 @@ with open('mal_data.jsonl', 'a', encoding='utf-8') as json_file:
         except:
             ingredients = ""
 
-        print (mal, name)
+        
 
         product = {
             "name": name,
@@ -103,8 +105,7 @@ with open('mal_data.jsonl', 'a', encoding='utf-8') as json_file:
         }
 
         json_file.write(json.dumps(product) + "\n")
-        print(f"✅ Scraped and saved {mal}")
+        print(f"✅ Scraped and saved {mal} {name}")
 
 # Step 4: Clean up
 driver.quit()
-

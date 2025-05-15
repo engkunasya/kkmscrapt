@@ -6,6 +6,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
+
+
 # Setup undetected Chrome options for headless mode
 options = uc.ChromeOptions()
 options.add_argument("--headless")
@@ -18,6 +20,12 @@ options.add_argument("--window-size=1920,1080")
 driver = uc.Chrome(options=options)
 wait = WebDriverWait(driver, 10)
 
+# Helper: Wait until an element's text is non-empty
+def wait_for_non_empty_text(driver, xpath, timeout=10):
+    return WebDriverWait(driver, timeout).until(
+        lambda d: d.find_element(By.XPATH, xpath).text.strip() != ""
+    )
+
 # Step 1: Read selected MAL numbers from CSV
 with open('break1.csv') as file:
     reader = csv.reader(file)
@@ -26,7 +34,7 @@ with open('break1.csv') as file:
 mal_numbers = []
 
 # Step 2: Only select MAL numbers from rows 1 to 22
-for row in data[1:23]:  # rows 1 to 22
+for row in data[1:20]:  # rows 1 to 22
     for mal in row:
         mal = mal.strip()
         if mal:
@@ -78,7 +86,7 @@ with open('mal_data.jsonl', 'a', encoding='utf-8') as json_file:
         except:
             ingredients = ""
 
-        print (mal, name)
+        
 
         product = {
             "name": name,
