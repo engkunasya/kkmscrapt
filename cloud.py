@@ -4,6 +4,7 @@ import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import time
 
 # Setup undetected Chrome options for headless mode
 options = uc.ChromeOptions()
@@ -18,7 +19,7 @@ driver = uc.Chrome(options=options)
 wait = WebDriverWait(driver, 10)
 
 # Step 1: Read selected MAL numbers from CSV
-with open('mal_codes.csv') as file:
+with open('break1.csv') as file:
     reader = csv.reader(file)
     data = list(reader)
 
@@ -77,7 +78,7 @@ with open('mal_data.jsonl', 'a', encoding='utf-8') as json_file:
         except:
             ingredients = ""
 
-        print (mal, ingredients)
+        print (mal, name)
 
         product = {
             "name": name,
@@ -85,6 +86,7 @@ with open('mal_data.jsonl', 'a', encoding='utf-8') as json_file:
             "packaging": packaging,
             "recommendedPrice": 0.0,
             "manufacturer": manufacturer,
+            "holder": holder,
             "ingredients": ingredients
         }
 

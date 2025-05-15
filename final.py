@@ -90,7 +90,7 @@ with open('mal_data.jsonl', 'a', encoding='utf-8') as json_file:
         except:
             ingredients = ""
 
-        print (mal, ingredients)
+        print (mal, name)
 
         product = {
             "name": name,
@@ -98,6 +98,7 @@ with open('mal_data.jsonl', 'a', encoding='utf-8') as json_file:
             "packaging": packaging,
             "recommendedPrice": 0.0,
             "manufacturer": manufacturer,
+            "holder": holder,
             "ingredients": ingredients
         }
 
