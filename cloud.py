@@ -17,71 +17,80 @@ options.add_argument("--window-size=1920,1080")
 driver = uc.Chrome(options=options)
 wait = WebDriverWait(driver, 10)
 
-# Step 1: Read MAL numbers from CSV
+# Step 1: Read selected MAL numbers from CSV
 with open('mal_codes.csv') as file:
     reader = csv.reader(file)
     data = list(reader)
 
 mal_numbers = []
 
-# Step 2: Select MAL numbers from rows 1 to 22
-for row in data[1:23]:
+# Step 2: Only select MAL numbers from rows 1 to 22
+for row in data[1:23]:  # rows 1 to 22
     for mal in row:
         mal = mal.strip()
         if mal:
             mal_numbers.append(mal)
 
-json_data = []
+# Step 3: Scrape and save details immediately per MAL number
+with open('mal_data.jsonl', 'a', encoding='utf-8') as json_file:
+    for mal in mal_numbers:
+        url = f"https://quest3plus.bpfk.gov.my/pmo2/detail.php?type=product&id={mal}"
+        driver.get(url)
 
-for mal in mal_numbers:
-    url = f"https://quest3plus.bpfk.gov.my/pmo2/detail.php?type=product&id={mal}"
-    driver.get(url)
+        # Optional delay or additional wait if necessary
+        time.sleep(1.5)
 
-    try:
-        name = wait.until(EC.presence_of_element_located((
-            By.XPATH, '//*[@id="information"]/div[1]/table/tbody/tr[1]/td[1]/p/b'
-        ))).text.strip()
-    except:
-        name = ""
+        try:
+            name_xpath = '//*[@id="information"]/div[1]/table/tbody/tr[1]/td[1]/p/b'
+            wait_for_non_empty_text(driver, name_xpath)
+            name = driver.find_element(By.XPATH, name_xpath).text.strip()
+        except:
+            name = ""
 
-    try:
-        manufacturer = driver.find_element(
-            By.XPATH, '//*[@id="information"]/div[1]/table/tbody/tr[4]/td[1]/p/b'
-        ).text.strip()
-    except:
-        manufacturer = ""
+        print (mal, name)
 
-    try:
-        packaging = driver.find_element(
-            By.XPATH, '//*[@id="tab2"]/tbody'
-        ).text.strip()
-    except:
-        packaging = ""
+        try:
+            manufacturer = driver.find_element(
+                By.XPATH, '//*[@id="information"]/div[1]/table/tbody/tr[4]/td[1]/p/b'
+            ).text.strip()
+        except:
+            manufacturer = ""
 
-    try:
-        ingredients = driver.find_element(
-            By.XPATH, '//*[@id="tab1"]/tbody'
-        ).text.strip()
-    except:
-        ingredients = ""
+        try:
+            holder = driver.find_element(
+                By.XPATH, '//*[@id="information"]/div[1]/table/tbody/tr[2]/td[1]/p/b'
+            ).text.strip()
+        except:
+            holder = ""
 
-    product = {
-        "name": name,
-        "malNumber": mal,
-        "packaging": packaging,
-        "recommendedPrice": 0.0,
-        "manufacturer": manufacturer,
-        "ingredients": ingredients
-    }
+        try:
+            packaging = driver.find_element(
+                By.XPATH, '//*[@id="tab2"]/tbody'
+            ).text.strip()
+        except:
+            packaging = ""
 
-    json_data.append(product)
-    print(f"✅ Scraped {mal}")
+        try:
+            ingredients = driver.find_element(
+                By.XPATH, '//*[@id="tab1"]/tbody'
+            ).text.strip()
+        except:
+            ingredients = ""
 
-# Write all data to JSONL file
-with open('mal_data_headless.jsonl', 'w', encoding='utf-8') as json_file:
-    for item in json_data:
-        json_file.write(json.dumps(item) + "\n")
+        print (mal, ingredients)
 
-print(f"✅ Finished scraping {len(json_data)} records")
+        product = {
+            "name": name,
+            "malNumber": mal,
+            "packaging": packaging,
+            "recommendedPrice": 0.0,
+            "manufacturer": manufacturer,
+            "ingredients": ingredients
+        }
 
+        json_file.write(json.dumps(product) + "\n")
+        print(f"✅ Scraped and saved {mal}")
+
+# Step 4: Clean up
 driver.quit()
+
