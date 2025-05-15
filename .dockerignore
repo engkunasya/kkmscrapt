@@ -1,0 +1,11 @@
+# Ignore chromedriver.exe if you'll install ChromeDriver inside Docker instead
+chromedriver.exe
+.gitignore
+
+# Ignore other unnecessary files/folders
+*.pyc
+__pycache__/
+.env
+.vscode/
+.idea/
+node_modules/
