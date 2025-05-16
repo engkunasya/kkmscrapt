@@ -27,14 +27,14 @@ def wait_for_non_empty_text(driver, xpath, timeout=10):
     )
 
 # Step 1: Read selected MAL numbers from CSV
-with open('break2.csv') as file:
+with open('break3.csv') as file:
     reader = csv.reader(file)
     data = list(reader)
 
 mal_numbers = []
 
 # Step 2: Only select MAL numbers from rows 1 to 22
-for row in data[1:19]:  # rows 1 to 22
+for row in data[1:9]:  # rows 1 to 22
     for mal in row:
         mal = mal.strip()
         if mal:
