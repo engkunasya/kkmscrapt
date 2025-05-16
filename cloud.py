@@ -27,7 +27,7 @@ def wait_for_non_empty_text(driver, xpath, timeout=10):
     )
 
 # Step 1: Read selected MAL numbers from CSV
-with open('break4.csv') as file:
+with open('break5.csv') as file:
     reader = csv.reader(file)
     data = list(reader)
 
