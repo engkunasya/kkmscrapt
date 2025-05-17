@@ -34,7 +34,7 @@ with open('a1.csv') as file:
 mal_numbers = []
 
 # Step 2: Only select MAL numbers from rows 1 to 22
-for row in data[1:]: 
+for row in data[1:9]: 
     for mal in row:
         mal = mal.strip()
         if mal:
