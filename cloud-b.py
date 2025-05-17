@@ -27,21 +27,21 @@ def wait_for_non_empty_text(driver, xpath, timeout=10):
     )
 
 # Step 1: Read selected MAL numbers from CSV
-with open('break6.csv') as file:
+with open('b1.csv') as file:
     reader = csv.reader(file)
     data = list(reader)
 
 mal_numbers = []
 
 # Step 2: Only select MAL numbers from rows 1 to 22
-for row in data[1:7]:  # rows 1 to 22
+for row in data[1:]: 
     for mal in row:
         mal = mal.strip()
         if mal:
             mal_numbers.append(mal)
 
 # Step 3: Scrape and save details immediately per MAL number
-with open('mal_data.jsonl', 'a', encoding='utf-8') as json_file:
+with open('b.jsonl', 'a', encoding='utf-8') as json_file:
     for mal in mal_numbers:
         url = f"https://quest3plus.bpfk.gov.my/pmo2/detail.php?type=product&id={mal}"
         driver.get(url)
